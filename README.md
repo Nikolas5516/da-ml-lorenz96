@@ -46,7 +46,7 @@ Three configurations are compared, varying one component at a time:
 
 Figure axis labels are in the original Romanian. Captions below each figure summarize the content in English.
 
-**Convergence of forecast error.** Adam converges to lower RMSE-f roughly twice as fast as Adagrad across the 30 DA-ML cycles. Axis labels in Romanian: iterații = iterations.
+**Convergence of forecast error.** Adam converges to lower RMSE-f roughly twice as fast as Adagrad across the 30 DA-ML cycles. Axis labels in Romanian: ciclu = cycle.
 
 ![RMSE-f convergence](figures/rmse_f_convergence.png)
 
