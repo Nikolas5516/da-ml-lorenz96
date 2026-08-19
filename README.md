@@ -12,6 +12,12 @@ This repository contains the implementation and experiments for combining **data
 
 The surrogate model is a **residual convolutional neural network** that learns the system's dynamics without access to the governing equations — only from analysis fields produced by an Ensemble Kalman Filter.
 
+**Key result:** Adam optimizer reduces 1-step forecast RMSE by 25% versus the Adagrad reference. All hybrid configurations outperform cubic interpolation on the same sparse observation setup.
+
+## Why this matters
+
+Many real-world systems — weather, ocean dynamics, chemical processes — are chaotic and only partially observable. Traditional numerical models require the governing equations to be known in advance, but for many systems these equations are incomplete or unavailable. This work explores whether a neural network, guided by data assimilation, can learn the dynamics of a chaotic system directly from sparse, noisy observations — bypassing the need for explicit model equations.
+
 ## Method
 
 At each iteration of the DA-ML cycle:
@@ -35,6 +41,30 @@ Three configurations are compared, varying one component at a time:
 - Adam reduces RMSE-f by **25%** compared to Adagrad and converges twice as fast
 - The bilinear layer does not provide a clear advantage on the reduced dataset (K=4,000)
 - All configurations outperform cubic interpolation (RMSE-a: 1.2–1.4 vs. 2.44)
+
+## Results
+
+Figure axis labels are in the original Romanian. Captions below each figure summarize the content in English.
+
+**Convergence of forecast error.** Adam converges to lower RMSE-f roughly twice as fast as Adagrad across the 30 DA-ML cycles. Axis labels in Romanian: iterații = iterations.
+
+![RMSE-f convergence](figures/rmse_f_convergence.png)
+
+**Convergence of analysis error.** All hybrid configurations achieve analysis RMSE in the 1.22–1.40 range, substantially below the cubic interpolation baseline (2.44).
+
+![RMSE-a convergence](figures/rmse_a_convergence.png)
+
+**Forecast skill vs. lead time.** RMSE-f as a function of forecast horizon. Error growth reflects the chaotic nature of the system. Axis labels in Romanian: orizontul de prognoză = forecast horizon.
+
+![RMSE-f vs forecast horizon](figures/rmse_forecast_horizon.png)
+
+**Hovmøller diagram: true model vs. surrogate.** The trained surrogate reproduces the propagation patterns of the true Lorenz 96 dynamics. Left: true model; centre: surrogate; right: difference.
+
+![Hovmøller comparison](figures/hovmoller_comparison.png)
+
+**Lyapunov exponent estimation.** All configurations converge to Λ₁ ≈ 2.7–3.0. The true model reference is 1.67. The gap reflects the reduced dataset size (K=4,000) used to keep runtimes tractable. Brajard et al. use K=40,000.
+
+![Lyapunov exponent](figures/lyapunov_exponent.png)
 
 ## Setup
 
@@ -83,7 +113,3 @@ da-ml-lorenz96/
 ## Reference
 
 Brajard, J., Carrassi, A., Bocquet, M., Bertino, L.: *Combining data assimilation and machine learning to emulate a dynamical model from sparse and noisy observations: A case study with the Lorenz 96 model.* Journal of Computational Science, 44, 101171, 2020.
-
-## License
-
-This project was developed as part of a bachelor's thesis at Babeș-Bolyai University.
